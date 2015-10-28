@@ -62,10 +62,9 @@ type of the field (see the `field type reference`_) and the third argument are
 additional options to customize the form type. Only the first argument is
 required as the Form component has type guessers to guess the type.
 
-The ``BlogPost`` model has 4 properties: ``id``, ``title``, ``body``,
-``category``. The ``id`` property's value is generated automatically by the
-database. This means the form view just needs 3 fields: title, body and
-category.
+The ``BlogPost`` model has 5 properties: ``id``, ``title``, ``body``,
+``category``, ``draft``. The ``id`` property's value is generated automatically by the
+database. This means the form view just needs 4 fields: title, body, category and draft.
 
 The title and body fields are simple "text" and "textarea" fields, you can add
 them straight away:
@@ -80,6 +79,23 @@ them straight away:
         $formMapper
             ->add('title', 'text')
             ->add('body', 'textarea')
+        ;
+    }
+
+The draft field requires a bit of configuring:
+
+.. code-block:: php
+
+    // src/AppBundle/Admin/BlogPostAdmin.php
+
+    // ...
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $formMapper
+            // ...
+            ->add('draft', 'checkbox', array(
+                'required' => false
+            ))
         ;
     }
 
@@ -163,6 +179,9 @@ category field to a Meta data group. To do this, use the ``with()`` method:
             ->with('Content')
                 ->add('title', 'text')
                 ->add('body', 'textarea')
+                ->add('draft', 'checkbox', array(
+                    'required' => false
+                ))
             ->end()
 
             ->with('Meta data')
